@@ -788,5 +788,949 @@ Span tags allow you to group inline elements. Spans are useful for wrapping elem
   <h1 id="color-palette-tutorial" style="text-align:center">Pause Here</h1>
   <img src="https://github.com/lydiaguarino/emberitas-images/blob/master/Ember-Austin-Zoey-Half-sm.png?raw=true" alt="enter image description here" title=""></p>
 </div>
+
+
+
+
+
+
+
+
+<h2 id="part-2-converting-to-ember">Part 2 - Converting to Ember</h2>
+
+<p>Emberitas Track One | July 16th, 2016 | Lydia Guarino, Instructor <br>
+<img src="https://github.com/lydiaguarino/emberitas-images/blob/master/Ember-Austin-Zoey-Half-sm.png?raw=true" alt="enter image description here" title=""></p>
+
+<hr>
+
+<p>Ember is a front-end javascript framework. Now that we have a little bit more context around what a framework is, let’s learn about how to turn convert our <em>static</em> webpages to a <em>dynamic</em> web application with Ember.</p>
+
+<hr>
+
+
+
+<h2 id="getting-started">Getting Started</h2>
+
+<p>To start a new ember application, open your terminal window and run the following command from within the directory where your project will live.</p>
+
+<p><code>ember new color-palette</code></p>
+
+<p>Do some dancing while you wait for the application dependencies to install.</p>
+
+<hr>
+
+<p>Next, change directory (cd) into your newly created ember project directory. </p>
+
+<p><code>cd color-palette</code></p>
+
+<p>To test that everything is working as expected, start your local server by running the following command from your command line:</p>
+
+<p><code>ember server</code></p>
+
+<p>Open your browser and navigate to the following URL, where your local server is currently running the ember application:</p>
+
+<p><code>http://localhost:4200</code></p>
+
+<p>If you see “Welcome to Ember” or a happy little Tomster hamster, congrats! You have successfully created an Ember application!</p>
+
+<hr>
+
+
+
+<h2 id="understanding-the-ember-router">Understanding the Ember Router</h2>
+
+<blockquote>
+  <p>Imagine we are writing a web app for managing a blog. At any given time, we should be able to answer questions like What post are they looking at? and Are they editing it? In Ember.js, the answer to these questions is determined by the URL.</p>
+
+  <p>The URL can be set in a few ways:</p>
+
+  <p>The user loads the app for the first time. <br>
+  The user changes the URL manually, such as by clicking the back button or by editing the address bar. <br>
+  The user clicks a link within the app. <br>
+  Some other event in the app causes the URL to change.</p>
+
+  <p>Regardless of how the URL becomes set, the Ember router then maps the current URL to one or more route handlers. A route handler can do several things:</p>
+
+  <p>It can render a template. <br>
+  It can load a model that is then available to the template. <br>
+  It can redirect to a new route, such as if the user isn’t allowed to visit that part of the app. <br>
+  It can handle actions that involve changing a model or transitioning to a new route.</p>
+</blockquote>
+
+<hr>
+
+
+
+<h2 id="routes">Routes</h2>
+
+<p>Since the Ember Router is the core of our application, we’ll start building our application code by adding some routes. The routes represent the different pages in our application and will have individual URLs associated with them.</p>
+
+<p>We’ll need three routes for our application: <br>
+- A palettes route for our list view <br>
+- A palettes/new route for our creation form <br>
+- A palettes/edit route for our edit form</p>
+
+<p>To create some routes, Ember CLI provides us with some handy terminal commands that will automatically create some files for us. Since the framework provides the file structure for our application, using these <em>generators</em> is a handy way to quickly and confidently wire up the parts of our application. </p>
+
+<p><code>ember g route palettes</code></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs oxygene">installing route
+    <span class="hljs-keyword">create</span> app/routes/palettes.js
+    <span class="hljs-keyword">create</span> app/templates/palettes.hbs
+updating router
+    <span class="hljs-keyword">add</span> route palettes
+installing route-test
+    <span class="hljs-keyword">create</span> tests/<span class="hljs-keyword">unit</span>/routes/palettes-test.js</code></pre>
+
+<p><code>ember g route palettes/new</code></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs oxygene">installing route
+    <span class="hljs-keyword">create</span> app/routes/palettes/<span class="hljs-keyword">new</span>.js
+    <span class="hljs-keyword">create</span> app/templates/palettes/<span class="hljs-keyword">new</span>.hbs
+updating router
+    <span class="hljs-keyword">add</span> route palettes/<span class="hljs-keyword">new</span>
+installing route-test
+    <span class="hljs-keyword">create</span> tests/<span class="hljs-keyword">unit</span>/routes/palettes/<span class="hljs-keyword">new</span>-test.js</code></pre>
+
+<p><code>ember g route palettes/edit</code></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs oxygene">installing route
+    <span class="hljs-keyword">create</span> app/routes/palettes/edit.js
+    <span class="hljs-keyword">create</span> app/templates/palettes/edit.hbs
+updating router
+    <span class="hljs-keyword">add</span> route palettes/edit
+installing route-test
+    <span class="hljs-keyword">create</span> tests/<span class="hljs-keyword">unit</span>/routes/palettes/edit-test.js</code></pre>
+
+<hr>
+
+
+
+<h2 id="adding-an-index-template">Adding an index template</h2>
+
+<p>You can see that we automatically got some templates when we ran the generator for our routes. For our application, we need a couple of special templates. </p>
+
+<p>First, we need to add a template for our list view. Out of the box, Ember assumes that you might want to build pages with <em>nested</em> content - for example, you may want a route that shows a list of blog posts and also renders an individual blog post in the same view when you click one of the items.</p>
+
+<p>Our design doesn’t need any nested templates, so we can add this special template to render the list view without any nested content:</p>
+
+<p><code>ember g template palettes/index</code></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs oxygene">installing template
+    <span class="hljs-keyword">create</span> app/templates/palettes/<span class="hljs-keyword">index</span>.hbs</code></pre>
+
+<p>Next, we need a special type of template called a <em>partial</em>. <br>
+Partials allow you to create templates that will be reused in more than one place. Since both our new and edit pages will use exactly the same form, we can use a partial to use the same code in both places without having to have two copies of it. </p>
+
+<p>Partials MUST have a dash in their name.</p>
+
+<p><code>ember g template _palette-form</code></p>
+
+<hr>
+
+
+
+<h2 id="adding-bootstrap">Adding Bootstrap</h2>
+
+<p>Remember adding bootstrap to our static pages by adding the <code>&lt;link&gt;</code> tag in our HTML head? In an Ember application, we can use a special install command to import bootstrap directly into our project. There are a ton of awesome <em>add-ons</em> and libraries you can incorporate into your project, simply by running the install command with the library name.</p>
+
+<p>To install bootstrap, run the following command:</p>
+
+<p><code>ember install ember-bootstrap</code></p>
+
+<hr>
+
+
+
+<h2 id="copying-over-our-html-templates">Copying over our HTML templates</h2>
+
+<p>Great news! Ember templates are just HTML with some special sauce that lets us dynamically swap out the content that is displayed on the page. This means that all of the HTML we wrote earlier today can be directly ported over to our new application.</p>
+
+<p>Let’s copy over our templates from this morning into our brand new <em>Handlebars</em> Ember templates.</p>
+
+<p>Unlike in our HTML files, where we had to duplicate all the information in the HTML head on all of our files, Ember provides us with a special template that wraps ALL the other templates in our application. This means we can move all of the HTML that is the SAME on every page into this special <em>application</em> template, so that we don’t have to type it over and over again.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-comment">&lt;!-- app/templates/application.hbs --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"container"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"row"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2"</span>&gt;</span>
+        {{outlet}}
+      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span></code></pre>
+
+<p>Next, we’ll take the list view content that is <em>different</em> than the form view content and copy it into our palettes/index template.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-comment">&lt;!-- app/templates/palettes/index.hbs --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Color Palettes<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Add a Palette<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"palette.html"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn-group color-palette empty-palette"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Tropical<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"palette.html"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn-group color-palette"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(217,33,32)"</span> &gt;</span>217,33,32<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(231,116,47)"</span>&gt;</span>231,116,47<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(223,165,58)"</span>&gt;</span>223,165,58<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(177,190,78)"</span>&gt;</span>177,190,78<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(109,179,136)"</span>&gt;</span>109,179,136<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Cool<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"palette.html"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn-group color-palette"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(70,131,193)"</span>&gt;</span>70,131,193<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(63,78,161)"</span>&gt;</span>63,78,161<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(120,28,129)"</span>&gt;</span>120,28,129<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(0,0,0)"</span>&gt;</span>0,0,0<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(238,238,238)"</span>&gt;</span>238,238,238<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span></code></pre>
+
+<p>Now we’ll do the same for our form:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-comment">&lt;!-- app/templates/-palette-form.hbs --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>Tropical<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">form</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Palette Name<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"palette-name-input form-control"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">placeholder</span>=<span class="hljs-value">"New Palette"</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Palette Preview<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn-group color-palette"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(217,33,32)"</span> &gt;</span>217,33,32<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(231,116,47)"</span>&gt;</span>231,116,47<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(223,165,58)"</span>&gt;</span>223,165,58<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(177,190,78)"</span>&gt;</span>177,190,78<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(109,179,136)"</span>&gt;</span>109,179,136<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Edit Color<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn-group"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn preview-tile"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"background-color:rgb(217,33,32)"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-input-group"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-input-label"</span>&gt;</span>R<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-text-input form-control"</span> <span class="hljs-attribute">maxlength</span>=<span class="hljs-value">"3"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-range-input pull-right"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"range"</span> <span class="hljs-attribute">step</span>=<span class="hljs-value">1</span> <span class="hljs-attribute">min</span>=<span class="hljs-value">0</span> <span class="hljs-attribute">max</span>=<span class="hljs-value">255</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-input-group"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-input-label"</span>&gt;</span>G<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-text-input form-control"</span> <span class="hljs-attribute">maxlength</span>=<span class="hljs-value">"3"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-range-input pull-right"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"range"</span> <span class="hljs-attribute">step</span>=<span class="hljs-value">1</span> <span class="hljs-attribute">min</span>=<span class="hljs-value">0</span> <span class="hljs-attribute">max</span>=<span class="hljs-value">255</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-input-group"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-input-label"</span>&gt;</span>B<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-text-input form-control"</span> <span class="hljs-attribute">maxlength</span>=<span class="hljs-value">"3"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"color-range-input pull-right"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"range"</span> <span class="hljs-attribute">step</span>=<span class="hljs-value">1</span> <span class="hljs-attribute">min</span>=<span class="hljs-value">0</span> <span class="hljs-attribute">max</span>=<span class="hljs-value">255</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn-group form-actions"</span> <span class="hljs-attribute">role</span>=<span class="hljs-value">"group"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"palettes.html"</span>&gt;</span>Cancel<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"palettes.html"</span>&gt;</span>Delete<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"Save"</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span></code></pre>
+
+<hr>
+
+
+
+<h2 id="adding-in-our-styles">Adding in our styles</h2>
+
+<p>Again, since Ember controls the file structure of our application, there is already a designated place to put our application styling! We don’t have to mess with linking up style sheets in Ember.</p>
+
+<p>We can simply copy our styles directly into the supplied styles/app.css file.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs css"><span class="hljs-comment">/* app/styles/app.css */</span>
+
+<span class="hljs-tag">body</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#1C1F24</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#586073</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-tag">h1</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-family</span>:<span class="hljs-value"> <span class="hljs-string">'Pacifico'</span>, cursive</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">70</span>px</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin-top</span>:<span class="hljs-value"> <span class="hljs-number">50</span>px</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding-bottom</span>:<span class="hljs-value"> <span class="hljs-number">20</span>px</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">text-align</span>:<span class="hljs-value"> center</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-tag">h2</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">18</span>px</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.btn-group</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">100</span>%</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin-bottom</span>:<span class="hljs-value"> <span class="hljs-number">12</span>px</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin-top</span>:<span class="hljs-value"> <span class="hljs-number">12</span>px</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.color-palette</span> <span class="hljs-class">.btn</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">20</span>%</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">50</span>px</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> none</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">10</span>px</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> transparent</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.color-palette</span> <span class="hljs-class">.btn</span><span class="hljs-pseudo">:hover</span>, <span class="hljs-class">.color-palette</span> <span class="hljs-class">.btn</span><span class="hljs-pseudo">:focus</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#1C1F24</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> <span class="hljs-number">2</span>px solid <span class="hljs-hexcolor">#1C1F24</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.empty-palette</span> <span class="hljs-class">.btn</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> transparent</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> <span class="hljs-number">1</span>px solid <span class="hljs-hexcolor">#586073</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.empty-palette</span><span class="hljs-pseudo">:hover</span> <span class="hljs-class">.btn</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> <span class="hljs-number">1</span>px solid white</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.palette-name-input</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">100</span>%</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin-top</span>:<span class="hljs-value"> <span class="hljs-number">24</span>px</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin-bottom</span>:<span class="hljs-value"> <span class="hljs-number">24</span>px</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.preview-tile</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">100</span>%</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">50</span>px</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin-bottom</span>:<span class="hljs-value"> <span class="hljs-number">18</span>px</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.color-input-group</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">100</span>%</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin-bottom</span>:<span class="hljs-value"> <span class="hljs-number">6</span>px</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.color-input-label</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">24</span>px</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">10</span>%</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">vertical-align</span>:<span class="hljs-value"> middle</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.color-text-input</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">20</span>%</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">2</span>%</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> inline-block</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.color-input-group</span> <span class="hljs-class">.color-range-input</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">68</span>%</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin-top</span>:<span class="hljs-value"> <span class="hljs-number">18</span>px</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.form-actions</span> <span class="hljs-class">.btn</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">33.3</span>%</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">12</span>px</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin-top</span>:<span class="hljs-value"> <span class="hljs-number">12</span>px</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#586073</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> <span class="hljs-number">1</span>px solid <span class="hljs-hexcolor">#1C1F24</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> white</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.form-actions</span> <span class="hljs-class">.btn</span><span class="hljs-pseudo">:hover</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">opacity</span>:<span class="hljs-value"> .<span class="hljs-number">8</span></span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+
+
+
+<h2 id="adding-our-google-font">Adding our Google Font</h2>
+
+<p>The last thing we linked in our HTML file was the fancy Pacifico font from Google Fonts. In our Ember application, we can <em>import</em> the font directly into our css file with some special syntax.</p>
+
+<p>Add Pacifico to your css file by adding this line to the top of the file:</p>
+
+<p><code>@import url(https://fonts.googleapis.com/css?family=Pacifico);</code></p>
+
+<hr>
+
+<p>Let’s run our <code>ember server</code> command again and checkout how our application is looking!</p>
+
+<p>To take a look at our palettes list page, navigate to: <br>
+<code>http://localhost:4200/palettes</code></p>
+
+
+
+<h1 id="pause-here">PAUSE HERE</h1>
+
+
+
+<h1 id="wiring-up-our-interactions">Wiring up our interactions</h1>
+
+<p>Ember creates <em>single-page applications</em>, which means that instead of the server sending us back an individual HTML page when we visit the application’s URL, it actually sends us back the entire application. This means that links work a little differently. The Ember Router knows how to interpret URLs associated with each of the internal Ember Routes, but we have to treat our links a little differently.</p>
+
+<p>The first thing we need to swap out to get our application to work as expected are the <code>&lt;a&gt;</code> tags. We’ll replace them with some special Handlebars helpers called <code>{{link-to}}</code> helpers:</p>
+
+<p>replace <code>&lt;a&gt;</code> tags with <code>{{#link-to}} {{/link-to}}</code> <br>
+<code>{{#link-to 'palettes.edit'}}{{/link-to}}</code> <br>
+<code>{{#link-to 'palettes.new'}}{{/link-to}}</code> <br>
+<code>{{#link-to 'palettes'}}{{/link-to}}</code></p>
+
+<hr>
+
+
+
+<h2 id="working-with-dynamic-content">Working with dynamic content</h2>
+
+<p>Up to this point, we’ve been working with static web pages, where all the content is written directly in our HTML.</p>
+
+<p>To make our application dynamic, we will need to start thinking about the items in our list and the information that is backing our form and edit views as <em>dynamic data</em>.</p>
+
+<p>To start converting the items displayed in our list, let’s take a look at how they could be represented as <em>JavaScript Objects</em>.</p>
+
+<p>JavaScript Objects are a way of describing an item by its traits. Let’s take a look at what some objects might looks like for our palette list view:</p>
+
+<pre class="prettyprint"><code class=" hljs handlebars"><span class="xml"><span class="css"><span class="hljs-comment">/* app/routes/palettes.js */</span>
+
+<span class="hljs-tag">import</span> <span class="hljs-tag">Ember</span> <span class="hljs-tag">from</span> '<span class="hljs-tag">ember</span>';
+
+<span class="hljs-tag">export</span> <span class="hljs-tag">default</span> <span class="hljs-tag">Ember</span><span class="hljs-class">.Route</span><span class="hljs-class">.extend</span>(<span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">model() {
+    return [
+      {
+        id</span>:<span class="hljs-value"> <span class="hljs-number">1</span>,
+        name: <span class="hljs-string">'Tropical'</span>,
+        creator: <span class="hljs-string">'YOUR NAME'</span>,
+        colors: [
+          { r: <span class="hljs-number">217</span>, g: <span class="hljs-number">33</span>, b: <span class="hljs-number">32</span>, styleString: <span class="hljs-string">'background-color:rgb(217,33,32)'</span>, labelString: <span class="hljs-string">'217,33,32'</span></span></span></span>},
+          <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">231</span>, g: <span class="hljs-number">116</span>, b: <span class="hljs-number">47</span>, styleString: <span class="hljs-string">'background-color:rgb(231,116,47)'</span>, labelString: <span class="hljs-string">'231,116,47'</span></span></span></span>},
+          <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">223</span>, g: <span class="hljs-number">165</span>, b: <span class="hljs-number">58</span>, styleString: <span class="hljs-string">'background-color:rgb(223,165,58)'</span>, labelString: <span class="hljs-string">'223,165,58'</span></span></span></span>},
+          <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">177</span>, g: <span class="hljs-number">190</span>, b: <span class="hljs-number">78</span>, styleString: <span class="hljs-string">'background-color:rgb(177,190,78)'</span>, labelString: <span class="hljs-string">'177,190,78'</span></span></span></span>},
+          <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">109</span>, g: <span class="hljs-number">179</span>, b: <span class="hljs-number">136</span>, styleString: <span class="hljs-string">'background-color:rgb(109,179,136)'</span>, labelString: <span class="hljs-string">'109,179,136'</span></span></span></span>}
+        ]
+      },
+      <span class="hljs-rules">{
+        <span class="hljs-rule"><span class="hljs-attribute">id</span>:<span class="hljs-value"> <span class="hljs-number">2</span>,
+        name: <span class="hljs-string">'Cool'</span>,
+        creator: <span class="hljs-string">'YOUR NAME'</span>,
+        colors: [
+          { r: <span class="hljs-number">70</span>, g: <span class="hljs-number">131</span>, b: <span class="hljs-number">193</span>, styleString: <span class="hljs-string">'background-color:rgb(70,131,193)'</span>, labelString: <span class="hljs-string">'70,131,193'</span></span></span></span>},
+          <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">63</span>, g: <span class="hljs-number">78</span>, b: <span class="hljs-number">161</span>, styleString: <span class="hljs-string">'background-color:rgb(63,78,161)'</span>, labelString: <span class="hljs-string">'63,78,161'</span></span></span></span>},
+          <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">120</span>, g: <span class="hljs-number">28</span>, b: <span class="hljs-number">129</span>, styleString: <span class="hljs-string">'background-color:rgb(120,28,129)'</span>, labelString: <span class="hljs-string">'120,28,129'</span></span></span></span>},
+          <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">0</span>, g: <span class="hljs-number">0</span>, b: <span class="hljs-number">0</span>, styleString: <span class="hljs-string">'background-color:rgb(0,0,0)'</span>, labelString: <span class="hljs-string">'0, 0, 0'</span></span></span></span>},
+          <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">238</span>, g: <span class="hljs-number">238</span>, b: <span class="hljs-number">238</span>, styleString: <span class="hljs-string">'background-color:rgb(238,238,238)'</span>, labelString: <span class="hljs-string">'238,238,238'</span></span></span></span>}
+        ]
+      }
+    ];
+  }
+});
+</span></span></code></pre>
+
+<p>Let’s specify some models for our edit and new routes:</p>
+
+<pre class="prettyprint"><code class=" hljs handlebars"><span class="xml"><span class="css"><span class="hljs-comment">/* app/routes/palettes/edit.js and app/routes/palettes/new.js */</span>
+<span class="hljs-tag">import</span> <span class="hljs-tag">Ember</span> <span class="hljs-tag">from</span> '<span class="hljs-tag">ember</span>';
+
+<span class="hljs-tag">export</span> <span class="hljs-tag">default</span> <span class="hljs-tag">Ember</span><span class="hljs-class">.Route</span><span class="hljs-class">.extend</span>(<span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">model() {
+    return {
+      id</span>:<span class="hljs-value"> <span class="hljs-number">1</span>,
+      name: <span class="hljs-string">'Tropical'</span>,
+      creator: <span class="hljs-string">'YOUR NAME'</span>,
+      colors: [
+        { r: <span class="hljs-number">217</span>, g: <span class="hljs-number">33</span>, b: <span class="hljs-number">32</span>, styleString: <span class="hljs-string">'background-color:rgb(217,33,32)'</span>, labelString: <span class="hljs-string">'217,33,32'</span></span></span></span>},
+        <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">231</span>, g: <span class="hljs-number">116</span>, b: <span class="hljs-number">47</span>, styleString: <span class="hljs-string">'background-color:rgb(231,116,47)'</span>, labelString: <span class="hljs-string">'231,116,47'</span></span></span></span>},
+        <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">223</span>, g: <span class="hljs-number">165</span>, b: <span class="hljs-number">58</span>, styleString: <span class="hljs-string">'background-color:rgb(223,165,58)'</span>, labelString: <span class="hljs-string">'223,165,58'</span></span></span></span>},
+        <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">177</span>, g: <span class="hljs-number">190</span>, b: <span class="hljs-number">78</span>, styleString: <span class="hljs-string">'background-color:rgb(177,190,78)'</span>, labelString: <span class="hljs-string">'177,190,78'</span></span></span></span>},
+        <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">r</span>:<span class="hljs-value"> <span class="hljs-number">109</span>, g: <span class="hljs-number">179</span>, b: <span class="hljs-number">136</span>, styleString: <span class="hljs-string">'background-color:rgb(109,179,136)'</span>, labelString: <span class="hljs-string">'109,179,136'</span></span></span></span>}
+      ]
+    };
+  }
+});</span></span></code></pre>
+
+<hr>
+
+
+
+<h2 id="adding-dynamic-placeholders-to-our-templates">Adding dynamic placeholders to our templates</h2>
+
+<p>Now that we have some data to back our templates, we need to update our templates to use dynamic placeholders. You can think of these as the blanks in a madlibs document.</p>
+
+<p>First, let’s update our palettes list view to dynamically display each item in our list of palettes, instead of hard-coding our two example palettes.</p>
+
+<p>We’ll do this with another pair of Handlebars helpers called <code>{{each}}</code> helpers:</p>
+
+<pre class="prettyprint"><code class=" hljs handlebars"><span class="xml"><span class="css">&lt;!<span class="hljs-tag">--</span> <span class="hljs-tag">app</span>/<span class="hljs-tag">templates</span>/<span class="hljs-tag">palettes</span>/<span class="hljs-tag">index</span><span class="hljs-class">.hbs</span> <span class="hljs-tag">--</span>&gt;
+...
+</span></span><span class="hljs-expression">{{<span class="hljs-begin-block">#<span class="hljs-keyword">each</span> model as </span>|<span class="hljs-variable">palette</span>|}}</span><span class="xml"><span class="css">
+  &lt;<span class="hljs-tag">h2</span>&gt;</span></span><span class="hljs-expression">{{<span class="hljs-variable">palette.name</span>}}</span><span class="xml"><span class="css">&lt;/<span class="hljs-tag">h2</span>&gt;
+  </span></span><span class="hljs-expression">{{<span class="hljs-begin-block">#link-to </span>'<span class="hljs-variable">palettes.edit</span>' <span class="hljs-variable">class</span>=<span class="hljs-string">"btn-group color-palette"</span>}}</span><span class="xml"><span class="css">
+    </span></span><span class="hljs-expression">{{<span class="hljs-begin-block">#<span class="hljs-keyword">each</span> palette.colors as </span>|<span class="hljs-variable">color</span>|}}</span><span class="xml"><span class="css">
+      &lt;<span class="hljs-tag">button</span> <span class="hljs-tag">class</span>="<span class="hljs-tag">btn</span>" <span class="hljs-tag">type</span>="<span class="hljs-tag">button</span>" <span class="hljs-tag">style</span>=</span></span><span class="hljs-expression">{{<span class="hljs-variable">color.styleString</span>}}</span><span class="xml"><span class="css"> &gt;</span></span><span class="hljs-expression">{{<span class="hljs-variable">color.labelString</span>}}</span><span class="xml"><span class="css">&lt;/<span class="hljs-tag">button</span>&gt;
+    </span></span><span class="hljs-expression">{{<span class="hljs-end-block">/<span class="hljs-keyword">each</span></span>}}</span><span class="xml"><span class="css">
+  </span></span><span class="hljs-expression">{{<span class="hljs-end-block">/link-to</span>}}</span><span class="xml"><span class="css">
+</span></span><span class="hljs-expression">{{<span class="hljs-end-block">/<span class="hljs-keyword">each</span></span>}}</span><span class="xml"><span class="css"></span></span></code></pre>
+
+<p>We’ll do the same for our form:</p>
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-comment">&lt;!-- app/templates/-palette-form.hbs --&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">h1</span>&gt;</span>{{model.name}}<span class="hljs-tag">&lt;/<span class="hljs-title">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">form</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Palette Name<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"palette-name-input form-control"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">placeholder</span>=<span class="hljs-value">"New Palette"</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Palette Preview<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn-group color-palette"</span>&gt;</span>
+    {{#each model.colors as |color|}}
+      <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{{color.styleString}}</span>&gt;</span>{{color.labelString}}<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+    {{/each}}
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  ...
+</code></pre>
+
+<hr>
+
+
+
+<h1 id="pause-here-1">PAUSE HERE</h1>
+
+<p>Controllers and actions</p>
+
+<p><code>ember g controller palettes/edit</code></p>
+
+<pre class="prettyprint"><code class=" hljs oxygene">installing controller
+  <span class="hljs-keyword">create</span> app/controllers/palettes/edit.js
+installing controller-test
+  <span class="hljs-keyword">create</span> tests/<span class="hljs-keyword">unit</span>/controllers/palettes/edit-test.js</code></pre>
+
+<p><code>ember g controller palettes/new</code></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs oxygene">installing controller
+  <span class="hljs-keyword">create</span> app/controllers/palettes/<span class="hljs-keyword">new</span>.js
+installing controller-test
+  <span class="hljs-keyword">create</span> tests/<span class="hljs-keyword">unit</span>/controllers/palettes/<span class="hljs-keyword">new</span>-test.js</code></pre>
+
+<p>Controller:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cs"><span class="hljs-comment">/* app/controllers/palettes/new.js and app/controllers/palettes/edit.js */</span>
+import Ember <span class="hljs-keyword">from</span> <span class="hljs-string">'ember'</span>;
+
+export <span class="hljs-keyword">default</span> Ember.Controller.extend({
+  focusColor: <span class="hljs-keyword">null</span>,
+  actions: {
+    setFocusColor(color) {
+      <span class="hljs-keyword">this</span>.<span class="hljs-keyword">set</span>(<span class="hljs-string">'focusColor'</span>, color);
+    }
+  }
+});</code></pre>
+
+<p>connect actions and dynamic controller properties</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs xml"><span class="hljs-comment">&lt;!-- app/templates/-palette-form.hbs --&gt;</span>
+...
+<span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Palette Preview<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn-group color-palette"</span>&gt;</span>
+    {{#each model.colors as |color|}}
+      <span class="hljs-tag">&lt;<span class="hljs-title">button</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn"</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"button"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{{color.styleString}}</span> {{<span class="hljs-attribute">action</span> '<span class="hljs-attribute">setFocusColor</span>' <span class="hljs-attribute">color</span>}}&gt;</span>{{color.labelString}}<span class="hljs-tag">&lt;/<span class="hljs-title">button</span>&gt;</span>
+    {{/each}}
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>Edit Color<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn-group"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"btn preview-tile"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{{focusColor.styleString}}</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+
+...</code></pre>
+
+<p><img src="https://github.com/lydiaguarino/emberitas-images/blob/master/set-focus-color.gif?raw=true" alt="enter image description here" title=""></p>
+
+<hr>
+
+<p>Input helpers - bound properties</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs handlebars"><span class="xml"><span class="css">&lt;<span class="hljs-tag">h2</span>&gt;<span class="hljs-tag">Palette</span> <span class="hljs-tag">Name</span>&lt;/<span class="hljs-tag">h2</span>&gt;
+  </span></span><span class="hljs-expression">{{<span class="hljs-variable">input</span> <span class="hljs-variable">value</span>=<span class="hljs-variable">model.name</span> <span class="hljs-variable">class</span>=<span class="hljs-string">"palette-name-input form-control"</span> <span class="hljs-variable">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-variable">placeholder</span>=<span class="hljs-string">"New Palette"</span>}}</span><span class="xml"><span class="css">
+
+  &lt;<span class="hljs-tag">h2</span>&gt;<span class="hljs-tag">Palette</span> <span class="hljs-tag">Preview</span>&lt;/<span class="hljs-tag">h2</span>&gt;
+  &lt;<span class="hljs-tag">div</span> <span class="hljs-tag">class</span>="<span class="hljs-tag">btn-group</span> <span class="hljs-tag">color-palette</span>"&gt;
+    </span></span><span class="hljs-expression">{{<span class="hljs-begin-block">#<span class="hljs-keyword">each</span> model.colors as </span>|<span class="hljs-variable">color</span>|}}</span><span class="xml"><span class="css">
+      &lt;<span class="hljs-tag">button</span> <span class="hljs-tag">class</span>="<span class="hljs-tag">btn</span>" <span class="hljs-tag">type</span>="<span class="hljs-tag">button</span>" <span class="hljs-tag">style</span>=</span></span><span class="hljs-expression">{{<span class="hljs-variable">color.styleString</span>}}</span><span class="xml"><span class="css"> </span></span><span class="hljs-expression">{{<span class="hljs-variable"><span class="hljs-keyword">action</span></span> '<span class="hljs-variable">setFocusColor</span>' <span class="hljs-variable">color</span>}}</span><span class="xml"><span class="css">&gt;</span></span><span class="hljs-expression">{{<span class="hljs-variable">color.labelString</span>}}</span><span class="xml"><span class="css">&lt;/<span class="hljs-tag">button</span>&gt;
+    </span></span><span class="hljs-expression">{{<span class="hljs-end-block">/<span class="hljs-keyword">each</span></span>}}</span><span class="xml"><span class="css">
+  &lt;/<span class="hljs-tag">div</span>&gt;
+
+  &lt;<span class="hljs-tag">h2</span>&gt;<span class="hljs-tag">Edit</span> <span class="hljs-tag">Color</span>&lt;/<span class="hljs-tag">h2</span>&gt;
+  &lt;<span class="hljs-tag">div</span> <span class="hljs-tag">class</span>="<span class="hljs-tag">btn-group</span>"&gt;
+    &lt;<span class="hljs-tag">div</span> <span class="hljs-tag">class</span>="<span class="hljs-tag">btn</span> <span class="hljs-tag">preview-tile</span>" <span class="hljs-tag">style</span>=</span></span><span class="hljs-expression">{{<span class="hljs-variable">focusColor.styleString</span>}}</span><span class="xml"><span class="css">&gt;&lt;/<span class="hljs-tag">div</span>&gt;
+  &lt;/<span class="hljs-tag">div</span>&gt;
+  &lt;<span class="hljs-tag">div</span> <span class="hljs-tag">class</span>="<span class="hljs-tag">color-input-group</span>"&gt;
+    &lt;<span class="hljs-tag">span</span> <span class="hljs-tag">class</span>="<span class="hljs-tag">color-input-label</span>"&gt;<span class="hljs-tag">R</span>&lt;/<span class="hljs-tag">span</span>&gt;
+    </span></span><span class="hljs-expression">{{<span class="hljs-variable">input</span> <span class="hljs-variable">value</span>=<span class="hljs-variable">focusColor.r</span> <span class="hljs-variable">class</span>=<span class="hljs-string">"color-text-input form-control"</span> <span class="hljs-variable">maxlength</span>=<span class="hljs-string">"3"</span> <span class="hljs-variable">type</span>=<span class="hljs-string">"text"</span>}}</span><span class="xml"><span class="css">
+    </span></span><span class="hljs-expression">{{<span class="hljs-variable">input</span> <span class="hljs-variable">value</span>=<span class="hljs-variable">focusColor.r</span> <span class="hljs-variable">class</span>=<span class="hljs-string">"color-range-input pull-right"</span> <span class="hljs-variable">type</span>=<span class="hljs-string">"range"</span> <span class="hljs-variable">step</span>=1 <span class="hljs-variable">min</span>=0 <span class="hljs-variable">max</span>=255}}</span><span class="xml"><span class="css">
+  &lt;/<span class="hljs-tag">div</span>&gt;
+  &lt;<span class="hljs-tag">div</span> <span class="hljs-tag">class</span>="<span class="hljs-tag">color-input-group</span>"&gt;
+    &lt;<span class="hljs-tag">span</span> <span class="hljs-tag">class</span>="<span class="hljs-tag">color-input-label</span>"&gt;<span class="hljs-tag">G</span>&lt;/<span class="hljs-tag">span</span>&gt;
+    </span></span><span class="hljs-expression">{{<span class="hljs-variable">input</span> <span class="hljs-variable">value</span>=<span class="hljs-variable">focusColor.g</span> <span class="hljs-variable">class</span>=<span class="hljs-string">"color-text-input form-control"</span> <span class="hljs-variable">maxlength</span>=<span class="hljs-string">"3"</span> <span class="hljs-variable">type</span>=<span class="hljs-string">"text"</span>}}</span><span class="xml"><span class="css">
+    </span></span><span class="hljs-expression">{{<span class="hljs-variable">input</span> <span class="hljs-variable">value</span>=<span class="hljs-variable">focusColor.g</span> <span class="hljs-variable">class</span>=<span class="hljs-string">"color-range-input pull-right"</span> <span class="hljs-variable">type</span>=<span class="hljs-string">"range"</span> <span class="hljs-variable">step</span>=1 <span class="hljs-variable">min</span>=0 <span class="hljs-variable">max</span>=255}}</span><span class="xml"><span class="css">
+  &lt;/<span class="hljs-tag">div</span>&gt;
+  &lt;<span class="hljs-tag">div</span> <span class="hljs-tag">class</span>="<span class="hljs-tag">color-input-group</span>"&gt;
+    &lt;<span class="hljs-tag">span</span> <span class="hljs-tag">class</span>="<span class="hljs-tag">color-input-label</span>"&gt;<span class="hljs-tag">B</span>&lt;/<span class="hljs-tag">span</span>&gt;
+    </span></span><span class="hljs-expression">{{<span class="hljs-variable">input</span> <span class="hljs-variable">value</span>=<span class="hljs-variable">focusColor.b</span> <span class="hljs-variable">class</span>=<span class="hljs-string">"color-text-input form-control"</span> <span class="hljs-variable">maxlength</span>=<span class="hljs-string">"3"</span> <span class="hljs-variable">type</span>=<span class="hljs-string">"text"</span>}}</span><span class="xml"><span class="css">
+    </span></span><span class="hljs-expression">{{<span class="hljs-variable">input</span> <span class="hljs-variable">value</span>=<span class="hljs-variable">focusColor.b</span> <span class="hljs-variable">class</span>=<span class="hljs-string">"color-range-input pull-right"</span> <span class="hljs-variable">type</span>=<span class="hljs-string">"range"</span> <span class="hljs-variable">step</span>=1 <span class="hljs-variable">min</span>=0 <span class="hljs-variable">max</span>=255}}</span><span class="xml"><span class="css">
+  &lt;/<span class="hljs-tag">div</span>&gt;</span></span></code></pre>
+
+<p><img src="https://github.com/lydiaguarino/emberitas-images/blob/master/bound-properties.gif?raw=true" alt="enter image description here" title=""></p>
+
+<hr>
+
+<p>Computed properties</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs r"><span class="hljs-keyword">...</span>
+focusColorStyleString: Ember.computed(<span class="hljs-string">'focusColor.r'</span>, <span class="hljs-string">'focusColor.g'</span>, <span class="hljs-string">'focusColor.b'</span>, <span class="hljs-keyword">function</span>() {
+    var r = this.get(<span class="hljs-string">'focusColor.r'</span>);
+    var g = this.get(<span class="hljs-string">'focusColor.g'</span>);
+    var b = this.get(<span class="hljs-string">'focusColor.b'</span>);
+    <span class="hljs-keyword">if</span> (r || g || b) {
+      <span class="hljs-keyword">return</span> Ember.String.htmlSafe(`background-color:rgb(${r}, ${g}, ${b})`);
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">return</span> Ember.String.htmlSafe(<span class="hljs-string">'background-color:transparent; border:1px solid #586073'</span>);
+    }
+  })
+  <span class="hljs-keyword">...</span></code></pre>
+
+<p><img src="https://github.com/lydiaguarino/emberitas-images/blob/master/computed-property.gif?raw=true" alt="enter image description here" title=""></p>
+
+<hr>
+
+<p><code>ember install emberfire</code></p>
+
+<p>Add keys to config/environment.js</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs r">// config/environment.js
+
+module.exports = <span class="hljs-keyword">function</span>(environment) {
+    var ENV = {
+        firebase: {
+           apiKey: <span class="hljs-string">"AIzaSyBvdiz729ZWt5XUHQhsaEeR1MrO53Q_FyA"</span>,
+           authDomain: <span class="hljs-string">"emberitas-color-palette.firebaseapp.com"</span>,
+           databaseURL: <span class="hljs-string">"https://emberitas-color-palette.firebaseio.com"</span>,
+           storageBucket: <span class="hljs-string">"emberitas-color-palette.appspot.com"</span>
+         },
+         <span class="hljs-keyword">...</span></code></pre>
+
+<hr>
+
+<p>Generate models <br>
+<code>ember g model palette</code></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs oxygene">installing model
+  <span class="hljs-keyword">create</span> app/models/palette.js
+installing model-test
+  <span class="hljs-keyword">create</span> tests/<span class="hljs-keyword">unit</span>/models/palette-test.js</code></pre>
+
+<p><code>ember g model color</code></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs oxygene">installing model
+  <span class="hljs-keyword">create</span> app/models/color.js
+installing model-test
+  <span class="hljs-keyword">create</span> tests/<span class="hljs-keyword">unit</span>/models/color-test.js</code></pre>
+
+<p>combine computed properties and fixture structure. Has many, belongs to <br>
+MAKE SURE THEY CHANGE THE CREATOR DEFAULT TO THEIR OWN NAME</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cs">import Model <span class="hljs-keyword">from</span> <span class="hljs-string">'ember-data/model'</span>;
+import attr <span class="hljs-keyword">from</span> <span class="hljs-string">'ember-data/attr'</span>;
+import { hasMany } <span class="hljs-keyword">from</span> <span class="hljs-string">'ember-data/relationships'</span>;
+
+export <span class="hljs-keyword">default</span> Model.extend({
+  name: attr({ defaultValue: <span class="hljs-string">'New Palette'</span> }),
+  creator: attr({ defaultValue: <span class="hljs-string">'YOUR NAME'</span> }),
+  colors: hasMany(<span class="hljs-string">'color'</span>, {<span class="hljs-keyword">async</span>: <span class="hljs-keyword">false</span>})
+});</code></pre>
+
+
+
+<pre class="prettyprint"><code class=" hljs actionscript"><span class="hljs-preprocessor"><span class="hljs-keyword">import</span> Model from 'ember-data/model';</span>
+<span class="hljs-preprocessor"><span class="hljs-keyword">import</span> attr from 'ember-data/attr';</span>
+<span class="hljs-preprocessor"><span class="hljs-keyword">import</span> Ember from 'ember';</span>
+<span class="hljs-preprocessor"><span class="hljs-keyword">import</span> { belongsTo } from 'ember-data/relationships';</span>
+
+export <span class="hljs-keyword">default</span> Model.extend({
+  palette: belongsTo(<span class="hljs-string">'palette'</span>, { async: <span class="hljs-literal">false</span> }),
+  r: attr({ defaultValue: <span class="hljs-number">0</span> }),
+  g: attr({ defaultValue: <span class="hljs-number">0</span> }),
+  b: attr({ defaultValue: <span class="hljs-number">0</span> }),
+  styleString: Ember.computed(<span class="hljs-string">'r'</span>, <span class="hljs-string">'g'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> r = <span class="hljs-keyword">this</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">'r'</span>);
+    <span class="hljs-keyword">var</span> g = <span class="hljs-keyword">this</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">'g'</span>);
+    <span class="hljs-keyword">var</span> b = <span class="hljs-keyword">this</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">'b'</span>);
+    <span class="hljs-keyword">if</span> (r || g || b) {
+      <span class="hljs-keyword">return</span> Ember.String.htmlSafe(`background-color:rgb(${r}, ${g}, ${b})`);
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">return</span> Ember.String.htmlSafe(<span class="hljs-string">'background-color:transparent; border:1px solid #586073'</span>);
+    }
+  }),
+  labelString: Ember.computed(<span class="hljs-string">'r'</span>, <span class="hljs-string">'g'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> r = <span class="hljs-keyword">this</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">'r'</span>);
+    <span class="hljs-keyword">var</span> g = <span class="hljs-keyword">this</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">'g'</span>);
+    <span class="hljs-keyword">var</span> b = <span class="hljs-keyword">this</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">'b'</span>);
+    <span class="hljs-keyword">if</span> (r || g || b) {
+      <span class="hljs-keyword">return</span> Ember.String.htmlSafe(`${<span class="hljs-keyword">this</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">'r'</span>)}, ${<span class="hljs-keyword">this</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">'g'</span>)}, ${<span class="hljs-keyword">this</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">'b'</span>)}`);
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">return</span> <span class="hljs-string">''</span>;
+    }
+  }),
+});</code></pre>
+
+<hr>
+
+<p>rigging up real models to routes <br>
+Replace palettes route model hook with real data! Note special syntax JUST for firebase</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs javascript">model: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+   <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.store.query(<span class="hljs-string">'palette'</span>, {
+     orderBy: <span class="hljs-string">'creator'</span>,
+     equalTo: <span class="hljs-string">'Fixture'</span>
+   });
+ }</code></pre>
+
+<p>BROKEN! <br>
+Need a serializer <br>
+<code>ember g serializer palette</code></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs coffeescript"><span class="hljs-reserved">import</span> FirebaseSerializer from <span class="hljs-string">'emberfire/serializers/firebase'</span>;
+<span class="hljs-reserved">export</span> <span class="hljs-reserved">default</span> FirebaseSerializer.extend({
+  <span class="hljs-attribute">attrs</span>: {
+    <span class="hljs-attribute">colors</span>: {<span class="hljs-attribute">embedded</span>: <span class="hljs-string">'always'</span>}
+  }
+});</code></pre>
+
+<p>YAY! RECORDS FROM THE SERVER! <br>
+<img src="https://github.com/lydiaguarino/emberitas-images/blob/master/fixture-endpoint.png?raw=true" alt="enter image description here" title=""></p>
+
+<p>SWAP OUT THE FILTER FOR YOUR OWN NAME AGAIN</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs javascript">model: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+   <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.store.query(<span class="hljs-string">'palette'</span>, {
+     orderBy: <span class="hljs-string">'creator'</span>,
+     equalTo: <span class="hljs-string">'YOUR NAME'</span>
+   });
+ }</code></pre>
+
+<hr>
+
+<p>Create model:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cs">import Ember <span class="hljs-keyword">from</span> <span class="hljs-string">'ember'</span>;
+
+export <span class="hljs-keyword">default</span> Ember.Route.extend({
+  model() {
+    <span class="hljs-comment">// add a new palette to our local store</span>
+    <span class="hljs-keyword">var</span> newPalette = <span class="hljs-keyword">this</span>.store.createRecord(<span class="hljs-string">'palette'</span>, {});
+    <span class="hljs-comment">// isolate the colors property of our new palette</span>
+    <span class="hljs-keyword">var</span> colors = newPalette.<span class="hljs-keyword">get</span>(<span class="hljs-string">'colors'</span>);
+    <span class="hljs-comment">// add five empty color records to the palette</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-number">5</span>; i++) {
+      colors.addObject(<span class="hljs-keyword">this</span>.store.createRecord(<span class="hljs-string">'color'</span>, {}));
+    }
+    <span class="hljs-keyword">return</span> newPalette;
+  },
+  afterModel(model) {
+    <span class="hljs-comment">// select the first color and make that the active color for editing</span>
+    <span class="hljs-keyword">this</span>.controllerFor(<span class="hljs-string">'palettes.new'</span>).<span class="hljs-keyword">set</span>(<span class="hljs-string">'focusColor'</span>, model.<span class="hljs-keyword">get</span>(<span class="hljs-string">'colors.firstObject'</span>));
+  }
+});</code></pre>
+
+<p>Add create action to form</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs coffeescript"><span class="hljs-attribute">actions</span>: {
+    setFocusColor(color) {
+      <span class="hljs-keyword">this</span>.set(<span class="hljs-string">'focusColor'</span>, color);
+    },
+    savePalette() {
+      <span class="hljs-reserved">var</span> palette = <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'model'</span>);
+      palette.save<span class="hljs-function"><span class="hljs-params">()</span>.<span class="hljs-title">then</span><span class="hljs-params">(() =&gt; {<span class="hljs-keyword">this</span>.transitionToRoute(<span class="hljs-string">'palettes.index'</span>);}, (err) =&gt; {<span class="hljs-built_in">console</span>.log(err);})</span>;
+    }
+  }</span></code></pre>
+
+<p><code>&lt;form {{action 'savePalette' on='submit'}}&gt;</code></p>
+
+<p>YAY! We can create REAL records!</p>
+
+<p>Now, for edit: <br>
+Dynamic segments - and while we’re at it - setting the index route:</p>
+
+<p>update router.js</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs javascript">Router.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">this</span>.route(<span class="hljs-string">'palettes'</span>, { path: <span class="hljs-string">'/'</span>},  <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">this</span>.route(<span class="hljs-string">'new'</span>);
+    <span class="hljs-keyword">this</span>.route(<span class="hljs-string">'edit'</span>, { path: <span class="hljs-string">'/palettes/:palette_id'</span> });
+  });
+});</code></pre>
+
+<p>Restart your server!</p>
+
+<p>swap out the model for something real:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cs">export <span class="hljs-keyword">default</span> Ember.Route.extend({
+  model(<span class="hljs-keyword">params</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.<span class="hljs-keyword">get</span>(<span class="hljs-string">'store'</span>).findRecord(<span class="hljs-string">'palette'</span>, <span class="hljs-keyword">params</span>.palette_id);
+  },
+  afterModel(model) {
+    <span class="hljs-keyword">this</span>.controllerFor(<span class="hljs-string">'palettes.edit'</span>).<span class="hljs-keyword">set</span>(<span class="hljs-string">'focusColor'</span>, model.<span class="hljs-keyword">get</span>(<span class="hljs-string">'colors.firstObject'</span>));
+  }
+});</code></pre>
+
+<p>Fix links to use dynamic segment! <br>
+<code>{{#link-to 'palettes.edit' palette.id class="btn-group color-palette"}}</code></p>
+
+<p>Add save, delete and cancel actions</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs coffeescript">savePalette() {
+      <span class="hljs-reserved">var</span> palette = <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'model'</span>);
+      palette.save<span class="hljs-function"><span class="hljs-params">()</span>.<span class="hljs-title">then</span><span class="hljs-params">(() =&gt; {<span class="hljs-keyword">this</span>.transitionToRoute(<span class="hljs-string">'palettes.index'</span>);}, (err) =&gt; {Ember.Logger.log(err);})</span>;
+ },
+ <span class="hljs-title">cancel</span><span class="hljs-params">()</span> {
+   <span class="hljs-title">var</span> <span class="hljs-title">palette</span> = <span class="hljs-title">this</span>.<span class="hljs-title">get</span><span class="hljs-params">(<span class="hljs-string">'model'</span>)</span>;
+   <span class="hljs-title">palette</span>.<span class="hljs-title">rollbackAttributes</span><span class="hljs-params">()</span>;
+   <span class="hljs-title">var</span> <span class="hljs-title">colors</span> = <span class="hljs-title">palette</span>.<span class="hljs-title">get</span><span class="hljs-params">(<span class="hljs-string">'colors'</span>)</span>;
+   <span class="hljs-title">colors</span>.<span class="hljs-title">forEach</span><span class="hljs-params">((color)=&gt;{
+     color.rollbackAttributes();
+   })</span>;
+   <span class="hljs-title">this</span>.<span class="hljs-title">transitionToRoute</span><span class="hljs-params">(<span class="hljs-string">'palettes'</span>)</span>;
+ },
+ <span class="hljs-title">deletePalette</span><span class="hljs-params">()</span> {
+   <span class="hljs-title">var</span> <span class="hljs-title">palette</span> = <span class="hljs-title">this</span>.<span class="hljs-title">get</span><span class="hljs-params">(<span class="hljs-string">'model'</span>)</span>;
+   <span class="hljs-title">palette</span>.<span class="hljs-title">destroyRecord</span><span class="hljs-params">()</span>;
+   <span class="hljs-title">this</span>.<span class="hljs-title">transitionToRoute</span><span class="hljs-params">(<span class="hljs-string">'palettes'</span>)</span>;
+ }</span></code></pre>
+
+<p>Add actions to new view buttons</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs cs">cancel() {
+   <span class="hljs-keyword">this</span>.transitionToRoute(<span class="hljs-string">'palettes'</span>);
+ },
+ deletePalette() {
+   <span class="hljs-keyword">this</span>.transitionToRoute(<span class="hljs-string">'palettes'</span>);
+ }</code></pre>
+
+<p>Add new actions to form buttons:</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs ocaml">&lt;button <span class="hljs-keyword">class</span>=<span class="hljs-string">"btn"</span> {{action <span class="hljs-string">'cancel'</span>}}&gt;Cancel&lt;/button&gt;
+&lt;button <span class="hljs-keyword">class</span>=<span class="hljs-string">"btn"</span> {{action <span class="hljs-string">'deletePalette'</span>}}&gt;Delete&lt;/button&gt;
+&lt;input <span class="hljs-keyword">class</span>=<span class="hljs-string">"btn"</span> <span class="hljs-class"><span class="hljs-keyword">type</span>=</span><span class="hljs-string">"submit"</span> <span class="hljs-keyword">value</span>=<span class="hljs-string">"Save"</span>&gt;</code></pre>
+
+<p>YAY!!!!!!! ALL THE THINGS WORK!!!!!</p>
+
+<p>Deploying to page front -  <br>
+<code>ember install ember-pagefront --app=YOUR_APP_NAME</code> <br>
+<code>ember deploy production</code></p>
+
+
+
+<h3 id="phase-4-building-a-crud-application-using-mvc-pattern"><i class="icon-star"></i> Phase 4 - <em>Building a CRUD application using MVC Pattern</em></h3>
+
+
+
+<h4 id="working-with-records">Working with Records</h4>
+
+
+
+<h4 id="intro-to-model-view-controller-mvc-pattern-or-in-our-case-m-t-c">Intro to Model View Controller (MVC) Pattern - or in our case, M <em>T</em> C</h4>
+
+
+
+<h4 id="templates">Templates</h4>
+
+
+
+<h4 id="models">Models</h4>
+
+
+
+<h4 id="controllers">Controllers</h4>
+
+
+
+<h3 id="phase-5-persistence"><i class="icon-star"></i> Phase 5 - <em>Persistence</em></h3>
+
+
+
+<h4 id="understanding-front-end-vs-back-end">Understanding “front-end” vs “back-end”</h4>
+
+
+
+<h4 id="intro-to-ember-data">Intro to Ember Data</h4>
+
+
+
+<h4 id="intro-to-working-with-apis-firebase">Intro to working with APIs (Firebase)</h4>
+
+
+
+<h3 id="phase-6-deployment-making-the-application-available-to-users"><i class="icon-star"></i> Phase 6 - <em>Deployment - Making the application available to users</em></h3>
+
+
+
+<h4 id="understanding-dns-and-hosting">Understanding DNS and hosting</h4>
+
+
+
+<h4 id="intro-to-pagefront">Intro to Pagefront</h4></div></body>
+</html>
 </div></body>
 </html>
